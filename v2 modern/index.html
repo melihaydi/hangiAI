@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="tr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HangiAI | Profesyonel Yapay Zeka Strateji ve Keşif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="bg-[#020617] antialiased" x-data="app()">
+
+    <div class="aurora bg-blue-600 top-[-10%] left-[-10%]"></div>
+    <div class="aurora bg-indigo-600 bottom-[-10%] right-[-10%]"></div>
+
+    <!-- Header: Logo ve Buton Korundu -->
+    <nav class="sticky top-0 z-[100] border-b border-white/5 bg-[#020617]/70 backdrop-blur-xl">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3 cursor-pointer group" @click="page = 'home'">
+                <div
+                    class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
+                    <span class="font-black text-white text-xl tracking-tighter">H</span>
+                </div>
+                <span
+                    class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">HangiAI</span>
+            </div>
+
+            <div
+                class="hidden lg:flex items-center gap-10 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500">
+                <a href="#" @click.prevent="page = 'home'" class="hover:text-blue-400 transition-colors">Ana Sayfa</a>
+                <a href="#" @click.prevent="page = 'tools'; selectedCategory = ''"
+                    class="hover:text-blue-400 transition-colors">AI Kütüphanesi</a>
+                <a href="#" @click.prevent="page = 'about'" class="hover:text-blue-400 transition-colors">Hakkımızda</a>
+            </div>
+
+            <button @click="startFinder()"
+                class="bg-blue-600 hover:bg-blue-500 text-white px-8 py-3 rounded-full font-bold text-sm shadow-xl shadow-blue-600/20 transition-all hover:scale-105 active:scale-95">
+                Akıllı Analiz
+            </button>
+        </div>
+    </nav>
+
+    <main class="relative z-10">
+        <!-- ANA SAYFA -->
+        <template x-if="page === 'home'">
+            <div class="animate-premium">
+                <!-- Hero -->
+                <section class="max-w-7xl mx-auto px-6 pt-32 pb-24 text-center">
+                    <div
+                        class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black tracking-[0.3em] mb-10 uppercase">
+                        AI Ecosystem Engine v6.0
+                    </div>
+                    <h1 class="text-6xl md:text-8xl font-extrabold tracking-tighter mb-10 leading-[1.05] text-white">
+                        Doğru Aracı Değil,<br>
+                        <span
+                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-cyan-400">Geleceği
+                            Keşfedin.</span>
+                    </h1>
+                    <p class="text-xl text-slate-400 max-w-2xl mx-auto mb-16 font-medium leading-relaxed">
+                        Karmaşık AI ekosisteminde kaybolmayın. Hedeflerinize ve yetkinliğinize en uygun profesyonel
+                        araçları analiz edelim.
+                    </p>
+                    <button @click="startFinder()"
+                        class="px-12 py-6 bg-white text-slate-950 rounded-[2rem] font-black text-xl hover:bg-blue-50 transition-all shadow-2xl">Hemen
+                        Analize Başla</button>
+                </section>
+
+                <!-- 10 UZMANLIK ALANI -->
+                <section class="max-w-7xl mx-auto px-6 py-24 border-t border-white/5">
+                    <div class="mb-20 text-center">
+                        <h2 class="text-4xl font-bold mb-4 tracking-tight text-white">Uzmanlık Alanları</h2>
+                        <p class="text-slate-500 font-medium">Dönüşüm başlatmak istediğiniz sektörü seçin.</p>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                        <template x-for="cat in categories" :key="cat.slug">
+                            <div @click="selectCategory(cat.slug)"
+                                class="premium-card p-10 rounded-[2.5rem] cursor-pointer text-center group">
+                                <div class="w-14 h-14 rounded-2xl bg-blue-600/10 text-blue-400 flex items-center justify-center mb-8 mx-auto group-hover:scale-110 transition-transform"
+                                    x-html="cat.icon"></div>
+                                <h3 class="text-lg font-bold text-white mb-2" x-text="cat.name"></h3>
+                                <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest"
+                                    x-text="cat.desc"></p>
+                            </div>
+                        </template>
+                    </div>
+                </section>
+
+                <!-- METODOLOJİ -->
+                <section class="max-w-7xl mx-auto px-6 py-32">
+                    <div class="premium-card rounded-[4rem] p-16 md:p-24 overflow-hidden relative">
+                        <div
+                            class="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 blur-[100px] -translate-y-1/2 translate-x-1/2">
+                        </div>
+                        <div class="grid lg:grid-cols-2 gap-24 items-center relative z-10">
+                            <div class="space-y-10">
+                                <h2 class="text-5xl font-black leading-tight text-white tracking-tighter">Veri Odaklı
+                                    <br><span class="text-blue-500">AI Stratejisi.</span>
+                                </h2>
+                                <p class="text-slate-400 text-lg leading-relaxed">Algoritmalarımız 500'den fazla
+                                    parametreyi tarayarak sizin için en düşük maliyetli ve en yüksek verimli AI
+                                    ekosistemini kurgular.</p>
+                                <div class="flex gap-4">
+                                    <div
+                                        class="px-6 py-3 bg-white/5 rounded-2xl border border-white/5 font-bold text-xs uppercase tracking-widest text-blue-400">
+                                        30+ Onaylı Araç</div>
+                                    <div
+                                        class="px-6 py-3 bg-white/5 rounded-2xl border border-white/5 font-bold text-xs uppercase tracking-widest text-indigo-400">
+                                        10 Ana Kategori</div>
+                                </div>
+                            </div>
+                            <div class="p-10 bg-slate-900/50 rounded-[3rem] border border-white/10 text-center">
+                                <div class="text-7xl font-black text-blue-500 mb-4 tracking-tighter">%98</div>
+                                <div class="text-xs font-black uppercase tracking-[0.3em] text-slate-500">Eşleşme
+                                    İsabeti</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </template>
+
+        <!-- FINDER WIZARD -->
+        <template x-if="page === 'finder'">
+            <div class="max-w-4xl mx-auto px-6 py-20 min-h-[75vh]">
+                <template x-if="finderResults.length === 0">
+                    <div class="animate-premium space-y-16">
+                        <div class="space-y-6 text-center">
+                            <div class="flex justify-center gap-1">
+                                <template x-for="i in 10">
+                                    <div class="h-1 w-12 rounded-full transition-all duration-500"
+                                        :class="i <= (finderStep + 1) ? 'bg-blue-500' : 'bg-white/5'"></div>
+                                </template>
+                            </div>
+                            <h2 class="text-4xl font-bold text-white leading-tight max-w-2xl mx-auto"
+                                x-text="finderQuestions[finderStep].q"></h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <template x-for="opt in finderQuestions[finderStep].a" :key="opt.v">
+                                <button @click="answerFinder(opt.v)"
+                                    class="premium-card p-8 rounded-[2rem] text-left hover:bg-blue-600 border-none transition-all group">
+                                    <span class="text-lg font-bold text-slate-300 group-hover:text-white"
+                                        x-text="opt.t"></span>
+                                </button>
+                            </template>
+                        </div>
+                        <div class="flex justify-center">
+                            <button x-show="finderStep > 0" @click="finderStep--"
+                                class="text-slate-500 hover:text-white font-bold text-xs uppercase tracking-widest">←
+                                Önceki Soru</button>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="finderResults.length > 0">
+                    <div class="animate-premium space-y-16">
+                        <div class="text-center">
+                            <div
+                                class="w-20 h-20 bg-emerald-500/10 text-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-500/20">
+                                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                        d="M5 13l4 4L19 7"></path>
+                                </svg>
+                            </div>
+                            <h2 class="text-5xl font-black mb-4 tracking-tighter">Analiz Tamamlandı</h2>
+                            <p class="text-slate-400 font-medium">Hedeflerinizle en uyumlu 6 profesyonel çözüm:</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <template x-for="tool in finderResults" :key="tool.slug">
+                                <div class="premium-card p-8 rounded-[2.5rem] flex flex-col items-center text-center">
+                                    <div
+                                        class="w-16 h-16 bg-white rounded-2xl p-3 mb-6 shadow-xl flex items-center justify-center">
+                                        <img :src="tool.logo" class="max-w-full max-h-full object-contain">
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2" x-text="tool.name"></h3>
+                                    <p class="text-xs text-slate-500 mb-8 flex-grow leading-relaxed"
+                                        x-text="tool.shortDesc"></p>
+                                    <button @click="openToolDetail(tool)"
+                                        class="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-xs tracking-widest uppercase">Rehberi
+                                        İncele</button>
+                                </div>
+                            </template>
+                        </div>
+                        <div class="flex justify-center"><button @click="resetFinder()"
+                                class="px-10 py-5 bg-white/5 border border-white/10 rounded-2xl font-bold text-slate-400 hover:text-white transition-all">Yeni
+                                Analiz Başlat</button></div>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- KÜTÜPHANE -->
+        <template x-if="page === 'tools'">
+            <div class="max-w-7xl mx-auto px-6 py-24 animate-premium">
+                <div class="flex overflow-x-auto gap-4 mb-20 pb-4 no-scrollbar">
+                    <button @click="selectedCategory = ''"
+                        :class="selectedCategory === '' ? 'bg-white text-slate-950 shadow-xl shadow-white/10' : 'bg-white/5 text-slate-400 hover:bg-white/10'"
+                        class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all">Tümü</button>
+                    <template x-for="cat in categories" :key="cat.slug">
+                        <button @click="selectedCategory = cat.slug"
+                            :class="selectedCategory === cat.slug ? 'bg-white text-slate-950 shadow-xl shadow-white/10' : 'bg-white/5 text-slate-400 hover:bg-white/10'"
+                            class="px-8 py-3 rounded-full text-[10px] font-black uppercase tracking-widest transition-all"
+                            x-text="cat.name"></button>
+                    </template>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <template x-for="tool in filteredTools" :key="tool.slug">
+                        <div @click="openToolDetail(tool)"
+                            class="premium-card p-10 rounded-[3rem] cursor-pointer group h-full flex flex-col">
+                            <div
+                                class="w-16 h-16 bg-white rounded-2xl p-4 mb-8 shadow-xl flex items-center justify-center">
+                                <img :src="tool.logo" class="max-w-full max-h-full object-contain">
+                            </div>
+                            <h3 class="text-2xl font-bold text-white mb-3" x-text="tool.name"></h3>
+                            <p class="text-sm text-slate-500 mb-10 flex-grow leading-relaxed" x-text="tool.shortDesc">
+                            </p>
+                            <span
+                                class="text-[10px] font-black uppercase text-blue-500 tracking-[0.2em] group-hover:translate-x-2 transition-transform inline-flex items-center gap-2">Detaylı
+                                Rehber →</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
+
+        <!-- HAKKIMIZDA -->
+        <template x-if="page === 'about'">
+            <div class="max-w-5xl mx-auto px-6 py-40 animate-premium text-center space-y-16">
+                <h2 class="text-7xl font-extrabold tracking-tighter text-white">Zekayı <br><span
+                        class="text-blue-500">Stratejiyle</span> Birleştiriyoruz.</h2>
+                <p class="text-2xl text-slate-400 leading-relaxed max-w-3xl mx-auto font-medium">HangiAI Platform,
+                    karmaşık yapay zeka ekosisteminde kaybolan profesyoneller için bir pusula görevi görür. Sadece bir
+                    araç dizini değil, bir adaptasyon merkezidir.</p>
+                <div class="grid md:grid-cols-2 gap-8 pt-16">
+                    <div class="premium-card p-12 rounded-[3.5rem] text-left">
+                        <h4 class="text-blue-500 font-black uppercase tracking-[0.2em] text-xs mb-6">Vizyonumuz</h4>
+                        <p class="text-slate-300 text-lg">Yapay zekanın bir engel değil, insan potansiyelini 100 kat
+                            artıran bir kaldıraç olduğu bir gelecek.</p>
+                    </div>
+                    <div class="premium-card p-12 rounded-[3.5rem] text-left">
+                        <h4 class="text-indigo-500 font-black uppercase tracking-[0.2em] text-xs mb-6">Metodoloji</h4>
+                        <p class="text-slate-300 text-lg">Piyasadaki binlerce araç arasından sadece gerçekten işe
+                            yarayan ve güvenli modelleri filtreleyerek sunuyoruz.</p>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- TOOL DETAY / REHBER -->
+        <template x-if="page === 'tool-detail' && currentTool">
+            <div class="max-w-6xl mx-auto px-6 py-20 animate-premium">
+                <button @click="page = 'tools'"
+                    class="mb-12 text-slate-500 hover:text-white flex items-center gap-3 font-black text-[10px] uppercase tracking-widest transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                    Kütüphaneye Dön
+                </button>
+                <div class="grid lg:grid-cols-3 gap-12">
+                    <div class="lg:col-span-2 space-y-12">
+                        <div class="flex items-center gap-10">
+                            <div
+                                class="w-32 h-32 bg-white rounded-[2.5rem] p-6 shadow-2xl flex items-center justify-center shrink-0">
+                                <img :src="currentTool.logo" class="max-w-full max-h-full object-contain">
+                            </div>
+                            <div>
+                                <h2 class="text-6xl font-black mb-4 tracking-tighter" x-text="currentTool.name"></h2>
+                                <span
+                                    class="px-5 py-1.5 bg-blue-600/10 text-blue-500 text-[10px] font-black uppercase tracking-[0.2em] rounded-lg border border-blue-500/20"
+                                    x-text="currentTool.pricingType"></span>
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-8">
+                            <div class="bg-emerald-500/5 border border-emerald-500/10 p-10 rounded-[3rem]">
+                                <h4 class="text-emerald-500 font-black uppercase text-[10px] tracking-widest mb-6">
+                                    Avantajlar</h4>
+                                <ul class="space-y-4 text-slate-300 font-medium">
+                                    <template x-for="pro in currentTool.pros">
+                                        <li class="flex items-start gap-3"><span>•</span> <span x-text="pro"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                            <div class="bg-red-500/5 border border-red-500/10 p-10 rounded-[3rem]">
+                                <h4 class="text-red-500 font-black uppercase text-[10px] tracking-widest mb-6">Zayıf
+                                    Yönler</h4>
+                                <ul class="space-y-4 text-slate-300 font-medium">
+                                    <template x-for="con in currentTool.cons">
+                                        <li class="flex items-start gap-3"><span>•</span> <span x-text="con"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="bg-blue-600/10 border border-blue-500/20 p-12 rounded-[4rem] space-y-8">
+                            <h4 class="text-blue-400 font-black uppercase text-[10px] tracking-[0.3em]">Uzman Rehberliği
+                            </h4>
+                            <p class="text-slate-200 text-xl leading-relaxed font-medium"
+                                x-text="currentTool.guidance.tip"></p>
+                            <div
+                                class="bg-black/40 p-8 rounded-3xl border border-white/5 font-mono text-blue-300 text-sm italic">
+                                "<span x-text="currentTool.guidance.prompt"></span>"
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-6">
+                        <a :href="currentTool.url" target="_blank"
+                            class="block w-full py-8 bg-white text-slate-950 text-center rounded-[2.5rem] font-black text-xl hover:bg-blue-50 transition-all shadow-2xl">Resmi
+                            Siteye Git</a>
+                        <div class="premium-card p-10 rounded-[3rem] border-white/5 space-y-6">
+                            <h5 class="text-white font-black text-xs uppercase tracking-widest mb-4">Künye</h5>
+                            <div class="flex justify-between border-b border-white/5 pb-4"><span
+                                    class="text-slate-500 font-bold uppercase text-[10px]">Kategori</span><span
+                                    class="text-white font-bold text-xs uppercase" x-text="currentTool.category"></span>
+                            </div>
+                            <div class="flex justify-between border-b border-white/5 pb-4"><span
+                                    class="text-slate-500 font-bold uppercase text-[10px]">TR Desteği</span><span
+                                    class="text-white font-bold text-xs uppercase">Yüksek</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </main>
+
+    <footer class="bg-[#010413] pt-40 pb-20 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-slate-600 text-[11px] font-black uppercase tracking-[0.5em]">© 2026 HangiAI Platform | Future
+                Built Better.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
